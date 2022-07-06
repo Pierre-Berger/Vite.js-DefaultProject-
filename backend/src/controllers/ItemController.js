@@ -1,4 +1,7 @@
 const models = require("../models");
+const creatingContact = require("../Mailler/mailer");
+const getContact = require("../Mailler/getContact");
+const sendEmail = require("../Mailler/sendEmail");
 
 class ItemController {
   static browse = (req, res) => {
@@ -6,6 +9,22 @@ class ItemController {
       .findAll()
       .then(([rows]) => {
         res.send(rows);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
+      });
+  };
+
+  static email = (req, res) => {
+    const { email } = req.body;
+    creatingContact(email)
+      .then((result) => {
+        const { id } = result;
+        getContact(id).then((resultat) => {
+          const { email: emailUser } = resultat;
+          sendEmail(emailUser);
+        });
       })
       .catch((err) => {
         console.error(err);

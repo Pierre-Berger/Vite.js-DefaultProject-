@@ -1,36 +1,28 @@
-import Counter from "../components/Counter";
-import logo from "../assets/logo.svg";
+/* eslint-disable react/jsx-props-no-spreading */
+import axios from "axios";
+import React from "react";
+import { useForm } from "react-hook-form";
 
 export default function Home() {
+  const { register, handleSubmit } = useForm();
+  const onSubmit = (data) => {
+    console.log(data);
+    axios
+      .post(`http://localhost:5000/email`, data)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   return (
     <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <p>Hello Vite + React !</p>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input {...register("email", { required: true })} />
 
-      <Counter />
-
-      <p>
-        Edit <code>App.jsx</code>.
-      </p>
-      <p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        {" | "}
-        <a
-          className="App-link"
-          href="https://vitejs.dev/guide/features.html"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Vite Docs
-        </a>
-      </p>
+        <input type="submit" />
+      </form>
     </header>
   );
 }
